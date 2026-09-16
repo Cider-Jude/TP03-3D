@@ -1,0 +1,22 @@
+THIRD-PARTY NOTICES
+Ancient Egyptian Spider — Low Poly Creature
+
+This package contains no third-party components.
+
+- All meshes, rigs, animations and textures were authored specifically for this
+  package by the publisher.
+- No fonts are included.
+- No audio is included.
+- No source code, libraries or shaders from third parties are included.
+- No Creative Commons, GPL, LGPL, Apache 2.0 or other attribution- or
+  copyleft-licensed material is included.
+- The package has no Unity Package Manager dependencies beyond the modules
+  shipped with a default Unity project.
+
+All content in this package is distributed under the Unity Asset Store End User
+License Agreement.
+
+If this file becomes out of date because third-party content is added in a
+future version, the corresponding component, its licence and a copy of the
+licence text will be listed here, and the product description will be updated
+accordingly.

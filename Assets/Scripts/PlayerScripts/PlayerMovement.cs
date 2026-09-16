@@ -19,6 +19,11 @@ public class Player : MonoBehaviour
     private float playerHeight;
     private float raycastDistance;
 
+
+
+    //Other
+    [SerializeField] private Animator animator;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -34,8 +39,18 @@ public class Player : MonoBehaviour
         moveHorizontal = Input.GetAxisRaw("Horizontal");
         moveForward = Input.GetAxisRaw("Vertical");
 
+        if((moveForward+moveForward) != 0)
+        {
+            animator.SetBool("isRunning", true);
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
+        }
+
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
+            animator.SetTrigger("jump");
             Jump();
         }
 

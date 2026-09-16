@@ -1,0 +1,46 @@
+AI DISCLOSURE
+Ancient Egyptian Spider — Low Poly Creature
+
+Submission guideline 1.1.b requires that content created with the aid of AI is
+disclosed in the "AI description" field of the publisher portal. The text below
+is written for that field. Read it, correct anything that does not match what
+you actually did, and paste it in. Do not submit it unchecked.
+
+--------------------------------------------------------------------------
+TEXT FOR THE "AI DESCRIPTION" FIELD
+--------------------------------------------------------------------------
+
+Tool used: Anthropic Claude (large language model), operating Blender through a
+scripting interface.
+
+What the AI produced: Claude wrote the Python scripts that generate the mesh,
+the armature, the vertex weights, the UV layout, the three palette textures and
+the keyframes of all five animation clips inside Blender. The geometry is
+therefore procedurally constructed from numeric parameters in those scripts.
+
+What was NOT used: no generative 3D model service (text-to-3D or image-to-3D),
+no diffusion or image-generation model, and no photogrammetry or scanned data.
+No mesh, texture or animation in this package was sampled, retopologised or
+derived from any existing third-party asset or generated artwork.
+
+Human contribution: the design brief, silhouette, proportions, colour scheme,
+Egyptian motif selection and gait behaviour were directed by the publisher, who
+reviewed every iteration and requested the corrections that produced the final
+result — including reworking the body proportions, the leg joint structure, the
+texture and material values, and replacing a whole-body turn with a true
+sideways gait. The publisher is responsible for the final topology, rig, weights
+and animation timing as shipped.
+
+--------------------------------------------------------------------------
+NOTES FOR THE PUBLISHER (do not paste this part)
+--------------------------------------------------------------------------
+
+- Guideline 1.1.b asks for plain terms and no marketing language. The text above
+  is deliberately dry; do not "improve" it with sales copy.
+- If you edit the model further in Blender, add a sentence describing what you
+  changed by hand.
+- The guideline also states that AI-aided submissions may be rejected if they do
+  not provide significant value or if they resemble third-party work. This asset
+  is procedurally generated and original, but approval is at Unity's discretion.
+- Guideline 3.1.a: descriptions that are purely AI-generated can be rejected.
+  Rewrite the store description in your own voice before submitting.
