@@ -15,14 +15,15 @@ public class Player : MonoBehaviour
     private bool isGrounded = true;
     public LayerMask groundLayer;
     private float groundCheckTimer = 0f;
-    private float groundCheckDelay = 0.3f;
+    [SerializeField] private float groundCheckDelay = 0.3f;
     private float playerHeight;
     private float raycastDistance;
-
+    
 
 
     //Other
     [SerializeField] private Animator animator;
+    public float animSmoothTime = 0.1f;
 
     void Start()
     {
@@ -38,32 +39,27 @@ public class Player : MonoBehaviour
     {
         moveHorizontal = Input.GetAxisRaw("Horizontal");
         moveForward = Input.GetAxisRaw("Vertical");
+        //we always check that if it is grounded to avoid that the player jumps when not in contact with the ground
+        Vector3 rayOrigin = transform.position + Vector3.up * 0.1f;
+        isGrounded = Physics.Raycast(rayOrigin, Vector3.down, raycastDistance, groundLayer);
 
-        if((moveForward+moveForward) != 0)
-        {
-            animator.SetBool("isRunning", true);
-        }
-        else
-        {
-            animator.SetBool("isRunning", false);
-        }
+        animator.SetFloat("MoveX", moveHorizontal, animSmoothTime, Time.deltaTime);
+        animator.SetFloat("MoveZ", moveForward, animSmoothTime, Time.deltaTime);
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        //In our case, we put ground check delay to 0 so that the user can jump directly when the user hits the ground, but in a real game, we would have a check to keep the space bar in memeory
+        if (Input.GetButtonDown("Jump") && isGrounded && groundCheckTimer <=0)
         {
             animator.SetTrigger("jump");
             Jump();
         }
 
         // Checking when we're on the ground and keeping track of our ground check delay
-        if (!isGrounded && groundCheckTimer <= 0f)
-        {
-            Vector3 rayOrigin = transform.position + Vector3.up * 0.1f;
-            isGrounded = Physics.Raycast(rayOrigin, Vector3.down, raycastDistance, groundLayer);
-        }
-        else
+        if (isGrounded && groundCheckTimer > 0f)
         {
             groundCheckTimer -= Time.deltaTime;
         }
+        animator.SetBool("isGrounded", Physics.Raycast(rayOrigin, Vector3.down, raycastDistance, groundLayer));
+
     }
 
     void FixedUpdate()
