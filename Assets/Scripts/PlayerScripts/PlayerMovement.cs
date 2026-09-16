@@ -1,16 +1,7 @@
 using UnityEngine;
 
-/*
-    This script provides jumping and movement in Unity 3D - Gatsby
-*/
-
 public class Player : MonoBehaviour
 {
-    // Camera Rotation
-    public float mouseSensitivity = 2f;
-    private float verticalRotation = 0f;
-    private Transform cameraTransform;
-
     // Ground Movement
     private Rigidbody rb;
     public float MoveSpeed = 5f;
@@ -32,23 +23,16 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-        cameraTransform = Camera.main.transform;
 
         // Set the raycast to be slightly beneath the player's feet
         playerHeight = GetComponent<CapsuleCollider>().height * transform.localScale.y;
         raycastDistance = (playerHeight / 2) + 0.2f;
-
-        // Hides the mouse
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     void Update()
     {
         moveHorizontal = Input.GetAxisRaw("Horizontal");
         moveForward = Input.GetAxisRaw("Vertical");
-
-        RotateCamera();
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
@@ -65,7 +49,6 @@ public class Player : MonoBehaviour
         {
             groundCheckTimer -= Time.deltaTime;
         }
-
     }
 
     void FixedUpdate()
@@ -76,7 +59,6 @@ public class Player : MonoBehaviour
 
     void MovePlayer()
     {
-
         Vector3 movement = (transform.right * moveHorizontal + transform.forward * moveForward).normalized;
         Vector3 targetVelocity = movement * MoveSpeed;
 
@@ -93,17 +75,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    void RotateCamera()
-    {
-        float horizontalRotation = Input.GetAxis("Mouse X") * mouseSensitivity;
-        transform.Rotate(0, horizontalRotation, 0);
-
-        verticalRotation -= Input.GetAxis("Mouse Y") * mouseSensitivity;
-        verticalRotation = Mathf.Clamp(verticalRotation, -90f, 90f);
-
-        cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
-    }
-
     void Jump()
     {
         isGrounded = false;
@@ -117,7 +88,7 @@ public class Player : MonoBehaviour
         {
             // Falling: Apply fall multiplier to make descent faster
             rb.linearVelocity += Vector3.up * Physics.gravity.y * fallMultiplier * Time.fixedDeltaTime;
-        } // Rising
+        }
         else if (rb.linearVelocity.y > 0)
         {
             // Rising: Change multiplier to make player reach peak of jump faster
