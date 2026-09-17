@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[ExecuteAlways] // Permet de voir la courbe se mettre à jour en temps réel dans l'éditeur, sans lancer le jeu
+[ExecuteAlways] 
 [RequireComponent(typeof(LineRenderer))]
 public class BezierCurve : MonoBehaviour
 {
@@ -66,29 +66,37 @@ public class BezierCurve : MonoBehaviour
         }
     }
 
-    // Algorithme de De Casteljau : interpolation linéaire répétée entre points
-    // consécutifs jusqu'à n'en obtenir plus qu'un seul. Fonctionne pour n'importe
-    // quel nombre de points de contrôle (3 = quadratique, 4 = cubique, N = Custom)
-    // sans aucune modification : c'est ce qui permet le mode Custom ci-dessus.
+    // Algorithme de De Casteljau, version RÉCURSIVE (exercice 9) : fonctionne pour
+    // n'importe quel nombre n ≥ 2 de points de contrôle (3 = quadratique, 4 = cubique,
+    // N = Custom), sans aucune modification.
     //
     // Équivalent mathématiquement aux formules explicites :
     //   Quadratique : B(t) = (1-t)²P0 + 2(1-t)t P1 + t²P2
     //   Cubique     : B(t) = (1-t)³P0 + 3(1-t)²t P1 + 3(1-t)t²P2 + t³P3
     Vector3 CalculateBezierPoint(float t, List<Transform> points)
     {
-        List<Vector3> temp = points.Select(p => p.position).ToList();
+        List<Vector3> positions = points.Select(p => p.position).ToList();
+        return CalculateBezierPointRecursive(t, positions);
+    }
 
-        int count = temp.Count;
-        while (count > 1)
+    // Cas de base : un seul point restant = le point de la courbe pour ce t.
+    // Cas récursif : on interpole chaque paire de points consécutifs, ce qui
+    // réduit la liste d'un élément, puis on rappelle la fonction sur cette
+    // liste réduite jusqu'à atteindre le cas de base.
+    Vector3 CalculateBezierPointRecursive(float t, List<Vector3> points)
+    {
+        if (points.Count == 1)
         {
-            for (int i = 0; i < count - 1; i++)
-            {
-                temp[i] = Vector3.Lerp(temp[i], temp[i + 1], t);
-            }
-            count--;
+            return points[0];
         }
 
-        return temp[0];
+        List<Vector3> nextLevel = new List<Vector3>(points.Count - 1);
+        for (int i = 0; i < points.Count - 1; i++)
+        {
+            nextLevel.Add(Vector3.Lerp(points[i], points[i + 1], t));
+        }
+
+        return CalculateBezierPointRecursive(t, nextLevel);
     }
 
     void OnDrawGizmos()

@@ -8,7 +8,13 @@ public class LightingBehavior : MonoBehaviour
     [SerializeField] private LightingPreset Preset;
 
     [Header("Variables")]
-    [SerializeField, Range(0,24)] private float TimeOfDay;
+    [SerializeField, Range(0, 24)] private float TimeOfDay;
+    [SerializeField] private float lightMaxIntensity = 5;
+
+    [Header("Time settings")]
+    [SerializeField] private float dayDurationInSeconds = 120f; // Durée réelle d'un cycle complet de 24h virtuelles (ex: 120s = 2 minutes)
+    [SerializeField] private float fastForwardMultiplier = 5f;  // Multiplicateur appliqué pendant l'accéléré
+    [SerializeField] private KeyCode fastForwardKey = KeyCode.LeftShift;
 
     private void Update()
     {
@@ -19,9 +25,16 @@ public class LightingBehavior : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            TimeOfDay += Time.deltaTime;
+            float timeSpeed = 24f / Mathf.Max(dayDurationInSeconds, 0.01f);
+
+            if (Input.GetKey(fastForwardKey))
+            {
+                timeSpeed *= fastForwardMultiplier;
+            }
+
+            TimeOfDay += timeSpeed * Time.deltaTime;
             TimeOfDay %= 24;
-            UpdateLighting(TimeOfDay/24f);
+            UpdateLighting(TimeOfDay / 24f);
         }
         else
         {
@@ -38,6 +51,12 @@ public class LightingBehavior : MonoBehaviour
         {
             DirectionalLight.color = Preset.DirectionalColor.Evaluate(timePercent);
             DirectionalLight.transform.localRotation = Quaternion.Euler(new Vector3((timePercent * 360) - 90f, -170f, 0f));
+
+            // Facteur d'intensité basé sur la hauteur du "soleil" dans le ciel :
+            // quand la lumière pointe vers le bas (forward.y négatif), le soleil est haut -> intensité max.
+            // quand elle pointe vers le haut (sous l'horizon), c'est la nuit -> intensité nulle.
+            float intensityFactor = Mathf.Clamp01(Vector3.Dot(DirectionalLight.transform.forward, Vector3.down));
+            DirectionalLight.intensity = lightMaxIntensity * intensityFactor;
         }
 
     }
@@ -49,7 +68,7 @@ public class LightingBehavior : MonoBehaviour
         {
             return;
         }
-        if(RenderSettings.sun != null)
+        if (RenderSettings.sun != null)
         {
             DirectionalLight = RenderSettings.sun;
         }
