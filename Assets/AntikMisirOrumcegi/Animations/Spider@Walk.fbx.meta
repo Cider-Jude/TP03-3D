@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: 99b33c9fd61b94f4e8cc0acad9a815e7
+AssetOrigin:
+  serializedVersion: 1
+  productId: 396258
+  packageName: LowPoly_Spider
+  packageVersion: 1.0
+  assetPath: Assets/AntikMisirOrumcegi/Animations/Spider@Walk.fbx
+  uploadId: 965144
 ModelImporter:
   serializedVersion: 24501
   internalIDToNameTable: []
@@ -16,7 +23,7 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
-    motionNodeName: 
+    motionNodeName: AntikOrumcek_Rig/Root
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -141,10 +148,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 396258
-  packageName: LowPoly_Spider
-  packageVersion: 1.0
-  assetPath: Assets/AntikMisirOrumcegi/Animations/Spider@Walk.fbx
-  uploadId: 965144
