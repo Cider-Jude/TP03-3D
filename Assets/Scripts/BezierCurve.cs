@@ -6,13 +6,14 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class BezierCurve : MonoBehaviour
 {
-    public enum CurveType { Quadratic, Cubic }
+    public enum CurveType { Quadratic, Cubic, Custom }
 
     [Header("Type de courbe")]
     public CurveType curveType = CurveType.Quadratic;
 
     [Header("Points de contrôle")]
-    [Tooltip("3 points pour une courbe quadratique, 4 pour une cubique (ajusté automatiquement)")]
+    [Tooltip("3 points pour une courbe quadratique, 4 pour une cubique (ajusté automatiquement). " +
+             "En mode Custom, ajoute/retire des points librement via la taille de la liste.")]
     public List<Transform> controlPoints = new List<Transform>();
 
     [Header("Rendu")]
@@ -32,7 +33,15 @@ public class BezierCurve : MonoBehaviour
 
     void OnValidate()
     {
-        // Garde automatiquement le bon nombre de slots selon le type de courbe choisi
+        // Quadratic/Cubic : nombre de points fixe et automatique.
+        // Custom : l'utilisateur gère librement la taille de la liste dans l'Inspecteur
+        // (au moins 2 points nécessaires pour former une courbe).
+        if (curveType == CurveType.Custom)
+        {
+            while (controlPoints.Count < 2) controlPoints.Add(null);
+            return;
+        }
+
         int required = curveType == CurveType.Quadratic ? 3 : 4;
         while (controlPoints.Count < required) controlPoints.Add(null);
         while (controlPoints.Count > required) controlPoints.RemoveAt(controlPoints.Count - 1);
@@ -46,7 +55,7 @@ public class BezierCurve : MonoBehaviour
     void DrawCurve()
     {
         if (lineRenderer == null) lineRenderer = GetComponent<LineRenderer>();
-        if (controlPoints.Count == 0 || controlPoints.Any(p => p == null)) return;
+        if (controlPoints.Count < 2 || controlPoints.Any(p => p == null)) return;
 
         lineRenderer.positionCount = resolution;
 
@@ -59,7 +68,8 @@ public class BezierCurve : MonoBehaviour
 
     // Algorithme de De Casteljau : interpolation linéaire répétée entre points
     // consécutifs jusqu'à n'en obtenir plus qu'un seul. Fonctionne pour n'importe
-    // quel nombre de points de contrôle (3 = quadratique, 4 = cubique, etc.)
+    // quel nombre de points de contrôle (3 = quadratique, 4 = cubique, N = Custom)
+    // sans aucune modification : c'est ce qui permet le mode Custom ci-dessus.
     //
     // Équivalent mathématiquement aux formules explicites :
     //   Quadratique : B(t) = (1-t)²P0 + 2(1-t)t P1 + t²P2
